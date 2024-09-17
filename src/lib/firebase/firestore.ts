@@ -1,7 +1,7 @@
 // services/firestore.ts
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
 import { db, storage } from "./firebaseConfig";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 
 
 const collectionName = "items";
@@ -75,4 +75,18 @@ export const uploadImage = (file: File) => {
             }
         );
     });
+};
+
+
+// deleteImage
+export const deleteImage = async (imagePath: string) => {
+    const storage = getStorage();
+    const imageRef = ref(storage, imagePath); // Buat referensi ke gambar berdasarkan path
+
+    try {
+        await deleteObject(imageRef); // Hapus gambar
+        console.log("Gambar berhasil dihapus");
+    } catch (error) {
+        console.error("Error saat menghapus gambar:", error);
+    }
 };
