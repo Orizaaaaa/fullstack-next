@@ -1,6 +1,7 @@
 // services/firestore.ts
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
-import { db } from "./firebaseConfig";
+import { db, storage } from "./firebaseConfig";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 
 const collectionName = "items";
@@ -42,4 +43,36 @@ export const updateItem = async (id: string, updatedItem: Partial<any>): Promise
 export const deleteItem = async (id: string): Promise<void> => {
     const docRef = doc(db, collectionName, id);
     await deleteDoc(docRef);
+};
+
+
+//export image ke storage firebase
+export const uploadImage = (file: File) => {
+    return new Promise<string>((resolve, reject) => {
+        // Buat referensi ke lokasi di Firebase Storage
+        const storageRef = ref(storage, `images/${file.name}`);
+
+        // Upload file ke Firebase Storage
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        // Monitor status upload
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                // Progress upload dapat ditampilkan di sini (optional)
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+            },
+            (error) => {
+                // Tangani kesalahan upload
+                reject(error);
+            },
+            () => {
+                // Dapatkan URL gambar setelah upload selesai
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    resolve(downloadURL); // Kirim URL download gambar
+                });
+            }
+        );
+    });
 };

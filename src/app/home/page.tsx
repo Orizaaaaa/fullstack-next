@@ -1,11 +1,12 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import InputForm from '../components/elements/InputForm'
-import { createItem, deleteItem, getItems, updateItem } from '@/lib/firebase/firestore'
+import { createItem, deleteItem, getItems, updateItem, uploadImage } from '@/lib/firebase/firestore'
 import { Modal, ModalBody, ModalContent, useDisclosure } from '@nextui-org/react'
 
 
 const Home = () => {
+
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
     const [idUser, setIdUser] = useState('')
     const [data, setData] = useState([])
@@ -15,6 +16,7 @@ const Home = () => {
         email: '',
         prodi: '',
         jenis_kelamin: '',
+        image: null as File | null,
     })
 
 
@@ -23,6 +25,8 @@ const Home = () => {
             .then((res: any) => setData(res))
     }, []);
 
+
+    // action change
     const handleChange = (e: any) => {
         const { name, value } = e.target;
         if (name === 'nim') {
@@ -49,19 +53,40 @@ const Home = () => {
         }
     };
 
+    const handleFileManager = (fileName: string) => {
+        if (fileName === 'add') {
+            const fileInput = document.getElementById("image-input-add") as HTMLInputElement | null;
+            fileInput ? fileInput.click() : null;
+        } else {
+            console.log('error');
+
+        }
+    };
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
+        if (InputSelect === 'add') {
+            const selectedImage = e.target.files?.[0];
+            setForm({ ...form, image: selectedImage || null });
+        } else {
+            console.log('error');
+
+        }
+    };
+
 
     //create
     const handleCreate = async (e: any) => {
         e.preventDefault();
 
         try {
-            await createItem(form);
+            const url = await uploadImage(form.image as File);
+            await createItem({ ...form, image: url });
             setForm({
                 name: '',
                 nim: '',
                 email: '',
                 prodi: '',
                 jenis_kelamin: '',
+                image: null as File | null,
             });
 
             getItems()
@@ -88,6 +113,7 @@ const Home = () => {
         email: '',
         prodi: '',
         jenis_kelamin: '',
+        imageURL: '',
     })
 
     const handleChangeUpdate = (e: any) => {
@@ -121,12 +147,6 @@ const Home = () => {
             .then((res: any) => setData(res))
 
     }
-
-
-    console.log(form);
-    console.log(data);
-
-
     return (
         <div className="container mx-auto">
             {/* form */}
@@ -150,6 +170,29 @@ const Home = () => {
                         </div>
 
                     </div>
+
+                    <div className="images ">
+                        {form.image && form.image instanceof Blob ? (
+                            <img className="h-[170px] md:h-[300px] w-auto mx-auto rounded-md" src={URL.createObjectURL(form.image)} />
+                        ) : (
+                            <div className="images border-dashed border-2 border-black rounded-md h-[200px] bg-gray-300">
+                                <button className="flex-col justify-center items-center h-full w-full " type="button" onClick={() => handleFileManager('add')} >
+                                    <img className="w-20 h-20 mx-auto" src='https://cdn-icons-png.flaticon.com/512/2956/2956744.png' />
+                                    <p>*Masukan foto mahasiswa</p>
+                                </button>
+                            </div>
+                        )}
+                        <input
+                            type="file"
+                            className="hidden"
+                            id="image-input-add"
+                            onChange={(e) => handleImageChange(e, 'add')}
+                        />
+                        <div className="flex justify-center gap-3 mt-3">
+                            <button className={`border-2 border-primary  text-primary px-4 py-2 rounded-md ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')} >Ubah Gambar</button>
+                        </div>
+                    </div>
+
                     <div className="flex justify-end">
                         <button type='submit' className='bg-blue-500 text-white px-3 py-2 rounded-md my-2  ' >Submit</button>
                     </div>
@@ -160,6 +203,7 @@ const Home = () => {
             <table className="table-auto w-full">
                 <thead>
                     <tr>
+                        <th className='text-left' >Foto</th>
                         <th className='text-left' >Nama</th>
                         <th className='text-left'>Nim</th>
                         <th className='text-left'>Email</th>
@@ -172,12 +216,13 @@ const Home = () => {
                 <tbody>
                     {data.map((item: any) => (
                         <tr key={item.id}>
+                            <td><img className='w-[100px] h-[100px] border-none' src={item.image} alt="" /></td>
                             <td>{item.name}</td>
                             <td>{item.nim}</td>
                             <td>{item.email}</td>
                             <td>{item.prodi}</td>
                             <td>{item.jenis_kelamin}</td>
-                            <td className='flex gap-2' >
+                            <td className='flex items-center  gap-2' >
                                 <button className='bg-blue-500 text-white px-3 py-2 rounded-md' onClick={() => handleOpenModal(item)} >Edit</button>
                                 <button className='bg-red-500 text-white px-3 py-2 rounded-md' onClick={() => handleDelete(item.id)} >Delete</button>
                             </td>
@@ -185,6 +230,7 @@ const Home = () => {
                     ))}
                 </tbody>
             </table>
+
 
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
