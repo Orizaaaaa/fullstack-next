@@ -4,12 +4,16 @@ import React, { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { createArticle, getArticles } from '@/lib/firebase/firestore';
+import InputForm from '../../elements/InputForm';
+import { useRouter } from 'next/navigation';
 
 /* Using dynamic import of Jodit component as it can't render in server side */
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 const TextEditor = ({ desc }: any) => {
     const [content, setContent] = useState(desc);
+    const [title, setTitle] = useState('');
+    const router = useRouter();
     // Declare using state
 
     /* The most important point */
@@ -29,14 +33,21 @@ const TextEditor = ({ desc }: any) => {
         setContent(value);
     };
 
+    const handleTitleChange = (e: any) => {
+        setTitle(e.target.value);
+    };
+
     const handleCreateArticle = async () => {
         const articleData = {
-            title: 'haleluya',
+            title: title,
             timestamp: new Date(),
             content, // Ini harus berupa objek, bukan string HTML
         };
 
-        const docId = await createArticle(articleData); // Dapatkan ID dari Firebase
+        const docId = await createArticle(articleData);
+        setContent('');
+        setTitle('');
+        router.push(`/articles`);
         console.log("Article created with ID:", docId);
     };
 
@@ -51,6 +62,7 @@ const TextEditor = ({ desc }: any) => {
                 <div className="h-screen flex items-center flex-col">
                     <div className="h-full">
                         {/* This is the main initialization of the Jodit editor */}
+                        <InputForm htmlFor="title" placeholder='Masukan judul artikel' type="text" onChange={handleTitleChange} value={title} />
                         <JoditEditor
                             value={content}         // This is important
                             config={config}         // Only use when you declare some custom configs
