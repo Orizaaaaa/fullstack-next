@@ -24,6 +24,12 @@ export const createItem = async (item: any): Promise<string> => {
 };
 
 
+//create article    
+export const createArticle = async (item: any): Promise<any> => {
+    const docRef = await addDoc(collection(db, "articles"), item);
+    return docRef.id;
+};
+
 // Read
 export const getItems = async (): Promise<(any & { id: string })[]> => {
     const querySnapshot = await getDocs(collection(db, collectionName));
