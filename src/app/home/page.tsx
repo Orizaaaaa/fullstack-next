@@ -239,37 +239,36 @@ const Home = () => {
             </table>
 
 
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose}>
                 <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalBody className='p-5' >
-                                <form onSubmit={handleUpdate}>
-                                    <InputForm type='text' onChange={handleChangeUpdate} value={formUpdate.name} htmlFor="name" title="Name" placeholder="Masukkan Nama" />
-                                    <InputForm type='number' onChange={handleChangeUpdate} value={formUpdate.nim} htmlFor="nim" title="NIM" placeholder="Masukkan Nim" />
-                                    <div className="flex w-full gap-2">
-                                        <InputForm type='email' onChange={handleChangeUpdate} value={formUpdate.email} htmlFor="email" title="Email" placeholder="Masukkan Email" />
-                                        <InputForm type='text' onChange={handleChangeUpdate} value={formUpdate.prodi} htmlFor="prodi" title="Prodi" placeholder="Masukkan Prodi" />
+                    <>
+                        <ModalBody className='p-5' >
+                            <form onSubmit={handleUpdate}>
+                                <InputForm type='text' onChange={handleChangeUpdate} value={formUpdate.name} htmlFor="name" title="Name" placeholder="Masukkan Nama" />
+                                <InputForm type='number' onChange={handleChangeUpdate} value={formUpdate.nim} htmlFor="nim" title="NIM" placeholder="Masukkan Nim" />
+                                <div className="flex w-full gap-2">
+                                    <InputForm type='email' onChange={handleChangeUpdate} value={formUpdate.email} htmlFor="email" title="Email" placeholder="Masukkan Email" />
+                                    <InputForm type='text' onChange={handleChangeUpdate} value={formUpdate.prodi} htmlFor="prodi" title="Prodi" placeholder="Masukkan Prodi" />
+                                </div>
+                                <h1 className='my-2' >Jenis Kelamin</h1>
+                                <div className="flex gap-6">
+                                    <div className="man">
+                                        <h1>Laki - Laki</h1>
+                                        <input type="radio" value={formUpdate.jenis_kelamin} onClick={() => setFormUpdate({ ...formUpdate, jenis_kelamin: 'laki-laki' })} name="jenis_kelamin" id="laki-laki" />
                                     </div>
-                                    <h1 className='my-2' >Jenis Kelamin</h1>
-                                    <div className="flex gap-6">
-                                        <div className="man">
-                                            <h1>Laki - Laki</h1>
-                                            <input type="radio" value={formUpdate.jenis_kelamin} onClick={() => setFormUpdate({ ...formUpdate, jenis_kelamin: 'laki-laki' })} name="jenis_kelamin" id="laki-laki" />
-                                        </div>
-                                        <div className="woman">
-                                            <h1>Perempuan</h1>
-                                            <input type="radio" value={formUpdate.jenis_kelamin} onClick={() => setFormUpdate({ ...formUpdate, jenis_kelamin: 'perempuan' })} name="jenis_kelamin" id="perempuan" />
-                                        </div>
+                                    <div className="woman">
+                                        <h1>Perempuan</h1>
+                                        <input type="radio" value={formUpdate.jenis_kelamin} onClick={() => setFormUpdate({ ...formUpdate, jenis_kelamin: 'perempuan' })} name="jenis_kelamin" id="perempuan" />
+                                    </div>
 
-                                    </div>
-                                    <div className="flex justify-end">
-                                        <button type='submit' className='bg-blue-500 text-white px-3 py-2 rounded-md my-2  ' >Submit</button>
-                                    </div>
-                                </form>
-                            </ModalBody>
-                        </>
-                    )}
+                                </div>
+                                <div className="flex justify-end">
+                                    <button type='submit' className='bg-blue-500 text-white px-3 py-2 rounded-md my-2  ' >Submit</button>
+                                </div>
+                            </form>
+                        </ModalBody>
+                    </>
+
                 </ModalContent>
             </Modal>
         </div>
