@@ -31,20 +31,14 @@ const TextEditor = ({ desc }: any) => {
 
     const handleCreateArticle = async () => {
         const articleData = {
-            content, // Ini harus berupa objek, bukan string HTML
+            title: 'haleluya',
             timestamp: new Date(),
-            // Tambahkan field lain yang diperlukan
+            content, // Ini harus berupa objek, bukan string HTML
         };
-        await createArticle(articleData);
+
+        const docId = await createArticle(articleData); // Dapatkan ID dari Firebase
+        console.log("Article created with ID:", docId);
     };
-
-    const [data, setData] = useState([]);
-    useEffect(() => {
-        getArticles().then((res: any) => setData(res));
-    }, []);
-
-    console.log(data);
-
 
     return (
         <>
@@ -78,13 +72,6 @@ const TextEditor = ({ desc }: any) => {
                     </div>
                 </div>
 
-                <p>tampilkan data submit</p>
-                {data.map((item: any) => (
-                    <div key={item.id} className="my-10 h-full w-full">
-                        Preview:
-                        <div dangerouslySetInnerHTML={{ __html: item.content }}></div>
-                    </div>
-                ))}
             </main>
         </>
     );

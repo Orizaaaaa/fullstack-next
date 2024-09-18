@@ -31,7 +31,7 @@ export const createArticle = async (item: any): Promise<any> => {
 };
 
 
-// Read
+// Read mahasiswa
 export const getItems = async (): Promise<(any & { id: string })[]> => {
     const querySnapshot = await getDocs(collection(db, collectionName));
     const items: (any & { id: string })[] = [];
@@ -42,17 +42,33 @@ export const getItems = async (): Promise<(any & { id: string })[]> => {
 };
 
 
-// Read articles
-export const getArticles = async (): Promise<(any & { id: string })[]> => {
+
+// Read articles dengan id dan title
+export const getArticles = async (): Promise<(any & { id: string, title: string })[]> => {
     const querySnapshot = await getDocs(collection(db, "articles"));
-    const items: (any & { id: string })[] = [];
+    const items: (any & { id: string, title: string })[] = [];
     querySnapshot.forEach((doc) => {
-        items.push({ id: doc.id, ...doc.data() } as any & { id: string });
+        const data = doc.data();
+        items.push({ id: doc.id, title: data.title } as any & { id: string, title: string });
     });
     return items;
 };
 
-// Read Detail (Lihat per item berdasarkan ID)
+
+//read articles by id
+export const getDetailArticle = async (id: string): Promise<any> => {
+    const docRef = doc(db, "articles", id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        return { id: docSnap.id, ...docSnap.data() };
+    } else {
+        throw new Error("Item tidak ditemukan");
+    }
+};
+
+
+// Read Detail mahasiswa (Lihat per item berdasarkan ID)
 export const getItemDetail = async (id: string): Promise<any> => {
     const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);
