@@ -1,5 +1,5 @@
 // services/firestore.ts
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc } from "firebase/firestore";
 import { db, storage } from "./firebaseConfig";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 
@@ -23,6 +23,7 @@ export const createItem = async (item: any): Promise<string> => {
     return docRef.id;
 };
 
+
 // Read
 export const getItems = async (): Promise<(any & { id: string })[]> => {
     const querySnapshot = await getDocs(collection(db, collectionName));
@@ -31,6 +32,18 @@ export const getItems = async (): Promise<(any & { id: string })[]> => {
         items.push({ id: doc.id, ...doc.data() } as any & { id: string });
     });
     return items;
+};
+
+// Read Detail (Lihat per item berdasarkan ID)
+export const getItemDetail = async (id: string): Promise<any> => {
+    const docRef = doc(db, collectionName, id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        return { id: docSnap.id, ...docSnap.data() };
+    } else {
+        throw new Error("Item tidak ditemukan");
+    }
 };
 
 // Update

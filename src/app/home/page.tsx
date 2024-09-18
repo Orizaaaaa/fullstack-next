@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import InputForm from '../components/elements/InputForm'
 import { createItem, deleteImage, deleteItem, getItems, updateItem, uploadImage } from '@/lib/firebase/firestore'
 import { Modal, ModalBody, ModalContent, useDisclosure } from '@nextui-org/react'
+import Link from 'next/link'
 
 
 const Home = () => {
@@ -222,8 +223,8 @@ const Home = () => {
                 <tbody>
                     {data.map((item: any) => (
                         <tr key={item.id}>
-                            <td><img className='w-[100px] h-[100px] border-none' src={item.image} alt="" /></td>
-                            <td>{item.name}</td>
+                            <td><img className='w-[50px] h-[50px] border-none rounded-full' src={item.image} alt="" /></td>
+                            <td> <Link href={`/home/${item.id}`}>{item.name}</Link> </td>
                             <td>{item.nim}</td>
                             <td>{item.email}</td>
                             <td>{item.prodi}</td>
