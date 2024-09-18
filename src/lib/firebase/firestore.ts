@@ -30,9 +30,21 @@ export const createArticle = async (item: any): Promise<any> => {
     return docRef.id;
 };
 
+
 // Read
 export const getItems = async (): Promise<(any & { id: string })[]> => {
     const querySnapshot = await getDocs(collection(db, collectionName));
+    const items: (any & { id: string })[] = [];
+    querySnapshot.forEach((doc) => {
+        items.push({ id: doc.id, ...doc.data() } as any & { id: string });
+    });
+    return items;
+};
+
+
+// Read articles
+export const getArticles = async (): Promise<(any & { id: string })[]> => {
+    const querySnapshot = await getDocs(collection(db, "articles"));
     const items: (any & { id: string })[] = [];
     querySnapshot.forEach((doc) => {
         items.push({ id: doc.id, ...doc.data() } as any & { id: string });

@@ -1,9 +1,9 @@
 /* Imports */
 'use client'
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
-import { createArticle } from '@/lib/firebase/firestore';
+import { createArticle, getArticles } from '@/lib/firebase/firestore';
 
 /* Using dynamic import of Jodit component as it can't render in server side */
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
@@ -38,6 +38,13 @@ const TextEditor = ({ desc }: any) => {
         await createArticle(articleData);
     };
 
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        getArticles().then((res: any) => setData(res));
+    }, []);
+
+    console.log(data);
+
 
     return (
         <>
@@ -70,6 +77,14 @@ const TextEditor = ({ desc }: any) => {
                         <div dangerouslySetInnerHTML={{ __html: content }}></div>
                     </div>
                 </div>
+
+                <p>tampilkan data submit</p>
+                {data.map((item: any) => (
+                    <div key={item.id} className="my-10 h-full w-full">
+                        Preview:
+                        <div dangerouslySetInnerHTML={{ __html: item.content }}></div>
+                    </div>
+                ))}
             </main>
         </>
     );
