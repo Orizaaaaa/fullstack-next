@@ -1,9 +1,8 @@
 import React from 'react'
 import TextEditor from '../components/fragments/TextEditor/TextEditor'
 
-type Props = {}
 
-const CreateArticles = (props: Props) => {
+const CreateArticles = () => {
     return (
         <div className='container mx-auto'>
             <div className="mt-10 ">
