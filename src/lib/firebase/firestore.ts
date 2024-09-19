@@ -106,6 +106,11 @@ export const updateArticle = async (id: string, updatedItem: Partial<any>): Prom
     await updateDoc(docRef, updatedItem);
 };
 
+export const deleteArticle = async (id: string): Promise<void> => {
+    const docRef = doc(db, "articles", id);
+    await deleteDoc(docRef);
+};
+
 
 
 // ------------------- Image -------------------
