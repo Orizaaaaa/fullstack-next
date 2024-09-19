@@ -100,6 +100,13 @@ export const getDetailArticle = async (id: string): Promise<any> => {
 };
 
 
+// edit article
+export const updateArticle = async (id: string, updatedItem: Partial<any>): Promise<void> => {
+    const docRef = doc(db, "articles", id);
+    await updateDoc(docRef, updatedItem);
+};
+
+
 
 // ------------------- Image -------------------
 

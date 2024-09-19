@@ -34,7 +34,7 @@ const Articles = () => {
                         </Link>
 
                         <div className="flex gap-2">
-                            <FaEdit color='blue' />
+                            <Link href={`/articles/edit/${article.id}`}> <FaEdit color='blue' /> </Link>
                             <FaTrashAlt color='red' />
                         </div>
                     </div>
