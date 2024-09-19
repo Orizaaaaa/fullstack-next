@@ -37,6 +37,7 @@ const TextEditor = ({ desc }: any) => {
         setTitle(e.target.value);
     };
 
+    //handle submit article
     const handleCreateArticle = async () => {
         const articleData = {
             title: title,

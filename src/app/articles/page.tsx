@@ -2,7 +2,7 @@
 import { getArticles } from '@/lib/firebase/firestore'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { FaRegNewspaper } from 'react-icons/fa'
+import { FaEdit, FaRegNewspaper, FaTrashAlt } from 'react-icons/fa'
 
 
 const Articles = () => {
@@ -27,10 +27,17 @@ const Articles = () => {
 
             <div className="grid grid-cols-4 gap-3">
                 {articles.map((article) => (
-                    <Link key={article.id} href={`/articles/${article.id}`} className="card shadow-2xl p-2 gap-2 flex items-center">
-                        <FaRegNewspaper size={23} />
-                        <p>{article.title}</p>
-                    </Link>
+                    <div key={article.id} className="card shadow-2xl p-2 gap-2 flex items-center justify-between">
+                        <Link href={`/articles/${article.id}`} className=" flex p-2 gap-2 items-center">
+                            <FaRegNewspaper size={23} />
+                            <p>{article.title}</p>
+                        </Link>
+
+                        <div className="flex gap-2">
+                            <FaEdit color='blue' />
+                            <FaTrashAlt color='red' />
+                        </div>
+                    </div>
                 ))}
             </div>
         </div>

@@ -6,7 +6,10 @@ import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } f
 
 const collectionName = "items";
 
-// Create
+
+// ------------------- Mahasiswa -------------------
+
+// Create mahasiswa
 export const createItem = async (item: any): Promise<string> => {
     // Cek apakah NIM sudah ada di database
     const q = query(collection(db, collectionName), where("nim", "==", item.nim));
@@ -24,13 +27,6 @@ export const createItem = async (item: any): Promise<string> => {
 };
 
 
-//create article    
-export const createArticle = async (item: any): Promise<any> => {
-    const docRef = await addDoc(collection(db, "articles"), item);
-    return docRef.id;
-};
-
-
 // Read mahasiswa
 export const getItems = async (): Promise<(any & { id: string })[]> => {
     const querySnapshot = await getDocs(collection(db, collectionName));
@@ -41,6 +37,42 @@ export const getItems = async (): Promise<(any & { id: string })[]> => {
     return items;
 };
 
+
+// Read Detail mahasiswa (Lihat per item berdasarkan ID)
+export const getItemDetail = async (id: string): Promise<any> => {
+    const docRef = doc(db, collectionName, id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        return { id: docSnap.id, ...docSnap.data() };
+    } else {
+        throw new Error("Item tidak ditemukan");
+    }
+};
+
+
+// Update mahasiswa
+export const updateItem = async (id: string, updatedItem: Partial<any>): Promise<void> => {
+    const docRef = doc(db, collectionName, id);
+    await updateDoc(docRef, updatedItem);
+};
+
+
+// Delete mahasiswa
+export const deleteItem = async (id: string): Promise<void> => {
+    const docRef = doc(db, collectionName, id);
+    await deleteDoc(docRef);
+};
+
+
+
+// ------------------- Article -------------------
+
+//create article    
+export const createArticle = async (item: any): Promise<any> => {
+    const docRef = await addDoc(collection(db, "articles"), item);
+    return docRef.id;
+};
 
 
 // Read articles dengan id dan title
@@ -68,30 +100,8 @@ export const getDetailArticle = async (id: string): Promise<any> => {
 };
 
 
-// Read Detail mahasiswa (Lihat per item berdasarkan ID)
-export const getItemDetail = async (id: string): Promise<any> => {
-    const docRef = doc(db, collectionName, id);
-    const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-        return { id: docSnap.id, ...docSnap.data() };
-    } else {
-        throw new Error("Item tidak ditemukan");
-    }
-};
-
-// Update
-export const updateItem = async (id: string, updatedItem: Partial<any>): Promise<void> => {
-    const docRef = doc(db, collectionName, id);
-    await updateDoc(docRef, updatedItem);
-};
-
-// Delete
-export const deleteItem = async (id: string): Promise<void> => {
-    const docRef = doc(db, collectionName, id);
-    await deleteDoc(docRef);
-};
-
+// ------------------- Image -------------------
 
 //export image ke storage firebase
 export const uploadImage = (file: File) => {
